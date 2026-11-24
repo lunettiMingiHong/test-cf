@@ -1,0 +1,137 @@
+층,공간ID,실명,영문명,구분,용도,담당,이용방법,예약처,연락처,비고
+1,103,종합강의실,Lecture Hall,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,104,기기분석실,Instrumental Analysis,전용,,,,,,
+1,104-1,,,,,,,,,안내판 없음 (피난안내도 표기: 104(1))
+1,105,습식실험실,Wet Chemistry,전용,,,,,,
+1,106,대학원연구실,Laboratory,전용,,,,,,
+1,107,저온실,Cold Room,전용,,,,,,
+1,108,준비실,Preparation,전용,,,,,,
+1,111,기계실,Machine Room,전용,,,,,,
+1,112,창고,Storage,전용,,,,,,
+1,113,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,114,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,115,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,wc,화장실,Restroom,,남·여 화장실,,,,,
+1,dwc,장애인 화장실,Accessible Restroom,,,,,,,
+1,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+1,hall,로비·복도,Lobby / Corridor,,,,,,,비상구 3곳 (북측·서측·동측)
+1,stair-c,중앙 계단,Central Stairs,,,,,,,
+1,stair-s,남측 계단,South Stairs,,,,,,,
+1,court,중정,Courtyard,개방,,,,,,1층 바닥이 있는 중정
+2,203,환경계획연구소 행정실,EPI Administration Office,전용,,,,,,
+2,204,도시·환경 미래전략과정 행정실,S.G.S Administration,전용,,,,,,SGS 총동창회 사무국
+2,205,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+2,206,학생회,Student Council,전용,,,,,,
+2,207,여학생 휴게실,Female Student Lounge,개방,,,,,,
+2,208,세미나실,Seminar Room,예약,,,환경대학원 학생회에 문의하면 사용할 수 있습니다.,환경대학원 학생회 (206호) https://docs.google.com/spreadsheets/u/1/d/1ytb1ckmG-1OwaRhQ8-AhEKDxKmuAo_uD/htmlview,,
+2,209,세미나실,Seminar Room,예약,,,환경대학원 학생회에 문의하면 사용할 수 있습니다.,환경대학원 학생회 (206호) https://docs.google.com/spreadsheets/u/1/d/14b7yJlNV5DEA9T-rQ5miqAvMnlLnjsHP/htmlview,,
+2,210,자료실,Library,개방,,,,,,
+2,211,모형제작실,Model Workshop,예약,,환경설계학과 사무실 (419호),"419호, 환경설계학과사무실에 문의하면 사용할 수 있습니다.",419호 환경설계학과사무실,,
+2,212,대학원연구실,Laboratory,전용,,,,,,
+2,213,대학원연구실,Laboratory,전용,,,,,,
+2,214,대학원연구실,Laboratory,전용,,,,,,
+2,215,대학원연구실,Laboratory,전용,,,,,,
+2,216,대학원연구실,Laboratory,전용,,,,,,
+2,217,강사실,Lecturer Room,전용,,,,,,
+2,218,BK사업단 사무실,BK Project Office,전용,,,,,,
+2,219,우정헌 교수실,Prof. Woo Jung-Hun,전용,교수연구실,우정헌 교수,,,,
+2,220,지거 췐 교수실,Prof. Jige Quan,전용,교수연구실,지거 췐 교수,,,,
+2,221,이효중 교수실,Prof. Hyojung Lee,전용,교수연구실,이효중 교수,,,,
+2,222,김태형 교수실,Prof. Tae-Hyoung Gim,전용,교수연구실,김태형 교수,,,,
+2,223,오능환 교수실,Prof. Neung-Hwan Oh,전용,교수연구실,오능환 교수,,,,
+2,224,윤순진 교수실,Prof. Yun Sun Jin,전용,교수연구실,윤순진 교수,,,,
+2,225,대학원연구실,Laboratory,전용,,,,,,
+2,226,대학원연구실,Laboratory,전용,,,,,,
+2,227,대학원연구실,Laboratory,전용,,,,,,
+2,wc,화장실,Restroom,,남·여 화장실,,,,,북측
+2,wc-s,화장실,Restroom,,남·여 화장실,,,,,남측
+2,dwc,장애인 화장실 (여성용),Accessible Restroom (Women),,,,,,,
+2,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+2,hall,복도·홀,Corridor,,,,,,,소화기·소화전 비치
+2,stair-n,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+2,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+2,lounge,중앙 라운지,Central Lounge,개방,,,,,,
+2,piano,피아노,Piano,개방,중앙 라운지 앞,,피아노 위 메모장에 신청곡을 적어보세요. 아침에 누군가 연주해줄 겁니다.,,,
+2,stair-s,남측 계단,South Stairs,,,,,,,비상구
+2,void,중정,Open Atrium,,,,,,,
+2,terrace,테라스,Terrace,개방,옥외 공간,,,,,
+2,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+3,303,세미나실,Seminar Room,예약,,,,,,
+3,304,대학원연구실,Laboratory,전용,,,,,,
+3,305,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+3,306,글로컬홀,GLOCAL HALL,예약,강의실,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+3,307,대학원행정실,Administration Office,전용,,,,,,
+3,307-1,,,,,,,,,안내판 없음
+3,308,교수세미나실,Faculty Seminar Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+3,309,송재민 교수실,Prof. Jaemin Song,전용,교수연구실,송재민 교수,,,,
+3,310,정현주 교수실,Prof. Hyunjoo Jung,전용,교수연구실,정현주 교수,,,,
+3,311,허성호 교수실,Prof. Hur Sung Ho,전용,교수연구실,허성호 교수,,,,
+3,312,이영성 교수실,Prof. Lee Young-Sung,전용,교수연구실,이영성 교수,,,,
+3,313,한상진 교수실,Prof. Han Sangjin,전용,교수연구실,한상진 교수,,,,
+3,314,장수은 교수실,Prof. Justin S. Chang,전용,교수연구실,장수은 교수,,,,
+3,315,박인권 교수실,Prof. In Kwon Park,전용,교수연구실,박인권 교수,,,,
+3,316,환경계획연구소 연구팀,EPI Research Team,전용,,,,,,
+3,318,도시계획/환경관리학과 사무실,Dept. of City Planning / Dept. of Environmental Management,전용,,,,,,
+3,319,대학원연구실,Laboratory,전용,,,,,,
+3,320,대학원연구실,Laboratory,전용,,,,,,
+3,321,전시실,Exhibition Hall,개방,,,,,,
+3,324,경비실,Guard Box,전용,,,,,,
+3,wc,화장실,Restroom,,남·여 화장실,,,,,북측
+3,wc-s,화장실,Restroom,,남·여 화장실,,,,,남측
+3,dwc,장애인 화장실,Accessible Restroom,,,,,,,
+3,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+3,hall,복도·홀,Corridor,,,,,,,소화기·심장충격기 비치
+3,stair-n,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+3,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+3,stair-s,남측 계단,South Stairs,,,,,,,비상구
+3,void,중정,Open Atrium,,,,,,,
+3,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+3,entrance,3층 출입구,3F Entrance,,출입구,,,,,동측 비상구
+4,401,대학원연구실,Laboratory,전용,,,,,,
+4,402,세미나실,Seminar Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+4,403,세미나실,Seminar Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+4,404,공용연구실,Laboratory,개방,대학원연구실,,,,,
+4,405,설계실,Design Studio,전용,,,,,,
+4,406,교수휴게실,Faculty Lounge,전용,,,,,,
+4,407,부속실,Secretary,전용,,,,,,
+4,408,원장실,Dean's Office,전용,,,,,,
+4,409,교수회의실,Faculty Conference Room,예약,,,,,,
+4,410,김세훈 교수실,Prof. Saehoon Kim,전용,교수연구실,김세훈 교수,,,,
+4,411,성종상 교수실,Prof. Sung Jong Sang,전용,교수연구실,성종상 교수,,,,
+4,412,조경진 교수실,Prof. Zoh Kyung-jin,전용,교수연구실,조경진 교수,,,,
+4,413,손용훈 교수실,Prof. Son Yong-Hoon,전용,교수연구실,손용훈 교수,,,,
+4,414,이유미 교수실,Prof. Lee Yumi,전용,교수연구실,이유미 교수,,,,
+4,415,이제승 교수실,Prof. Jae Seung Lee,전용,교수연구실,이제승 교수,,,,
+4,416,임 저스틴 교수실,Prof. Justin Lim,전용,교수연구실,임 저스틴 교수,,,,
+4,417,환경계획연구소 연구센터,EPI Research Center,전용,,,,,,
+4,419,환경설계학과 사무실,Dept. of Environmental Design,전용,,,,,,
+4,420,GLPN 연구실,GLPN Laboratory,전용,대학원연구실,,,,,
+4,421,USDL 연구실,USDL Laboratory,전용,대학원연구실,,,,,
+4,wc,화장실,Restroom,,남·여 화장실,,,,,북측
+4,wc-s,화장실,Restroom,,남·여 화장실,,,,,남측
+4,dwc,장애인 화장실 (남성용),Accessible Restroom (Men),,,,,,,
+4,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+4,hall,복도·홀,Corridor,,,,,,,소화기·소화전 비치
+4,stair-n,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+4,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+4,stair-s,남측 계단,South Stairs,,,,,,,비상구
+4,void,중정,Open Atrium,,,,,,,
+4,terrace,테라스,Terrace,개방,옥외 공간,,,,,
+4,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+5,501,청소원실,Cleaner's Room,전용,,,,,,
+5,502,대학원연구실,Laboratory,전용,,,,,,
+5,503,VR전산실/서버실,VR Computer Room / Server Room,전용,,,,,,
+5,504,교통실습실,Transportation Lab,전용,,,,,,
+5,505,논문방,Thesis Room,전용,대학원연구실,,,,,2개 실로 구성
+5,506,설계실,DESIGN ROOM,전용,대학원연구실,,,,,
+5,wc,화장실,Restroom,,남·여 화장실,,,,,
+5,shower,샤워실,Shower Room,,,,,,,
+5,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+5,hall,복도·홀,Corridor,,,,,,,소화기·소화전 비치
+5,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+5,stair-n2,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+5,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+5,stair-s,남측 계단,South Stairs,,,,,,,비상구
+5,void,중정,Open Atrium,,,,,,,
+5,garden,옥상정원,Rooftop Garden,개방,,,,,,
+
