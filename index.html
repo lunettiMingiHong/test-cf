@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>환경대학원 층별 안내도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/*
+VOICE: 차분한 건축 도면, 정보 안내판처럼 명료하게
+IDEA: 피난안내도를 깨끗한 벡터 도면으로 다시 그린 층별 시트
+PICTURE: 층 탭 아래 실마다 호버 가능한 SVG 평면도, 옆에 실 정보 카드
+COLOUR and TYPE: 초록 제목 띠, 흰 평면 + 짙은 초록 선 + 초록 하이라이트, IBM Plex Sans KR
+LAYOUT: 층 탭 → 도면(왼쪽) + 정보 패널(오른쪽); 760px 아래에서 세로로 쌓음
+*/
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0d1f15);--ink:light-dark(#12301f,#e6f4ea);--muted:light-dark(#587263,#9cbba8);--line:light-dark(#1d5c3a,#b9e2c8);--hi:#2f9e5e;--hiInk:#ffffff;--panel:light-dark(#f1f8f3,#122a1c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans KR",system-ui,sans-serif;overflow-x:clip}
+header{background:#1d6b42;color:#fff;padding:20px max(5vw,16px) 0}
+header h1{margin:0;font-size:clamp(24px,4vw,36px);line-height:1.1;font-weight:700;text-wrap:balance}
+header h1 b{color:#c8f2d6}
+header p{margin:4px 0 14px;opacity:.85;font-size:15px}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:#fff;text-decoration:none;font-weight:600;min-width:56px;min-height:44px;display:grid;place-items:center;padding:0 14px;border-radius:8px 8px 0 0;opacity:.75}
+nav a:hover{opacity:1;background:#ffffff1a}
+nav a.on{background:var(--bg);color:var(--ink);opacity:1}
+nav a:focus-visible{outline:3px solid #c8f2d6;outline-offset:-3px}
+main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(16px,3vw,40px);padding:clamp(20px,3vw,40px) max(5vw,16px);max-width:1240px;margin:0 auto;align-items:start}
+.plan{position:relative}
+svg{width:100%;height:auto;display:block;max-height:80vh}
+.wall{fill:none;stroke:var(--line);stroke-width:3;stroke-linejoin:round}
+.sp{fill:#ffffff;stroke:var(--line);stroke-width:1.5;cursor:pointer;transition:fill .15s}
+.g .sp.c-book{fill:#d3e6fa}.g .sp.c-open{fill:#d4f0db}.g .sp.c-own{fill:#e9e9e6}
+.g .sp:hover,.g .sp.on{fill:var(--hi)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 12px;font-size:14px;color:var(--muted);list-style:none;padding:0}
+.legend li{display:flex;align-items:center;gap:7px}
+.legend i{width:18px;height:14px;border:1.5px solid var(--line);border-radius:3px;display:inline-block}
+.sp:focus{outline:none}.sp:focus-visible{stroke:#0f3d24;stroke-width:3}
+.lb{font:600 15px "IBM Plex Sans KR",sans-serif;fill:#12301f;text-anchor:middle;dominant-baseline:middle;pointer-events:none}
+.g.on .lb,.g:hover .lb{fill:var(--hiInk)}
+.hole{fill:var(--bg);stroke:none;pointer-events:none}
+.nofloor{stroke:#8fcfa5;stroke-width:1.2;fill:none;pointer-events:none}
+.lb.hov{opacity:0}.g:hover .lb.hov,.g.on .lb.hov{opacity:1}
+.tip{position:absolute;pointer-events:none;background:#14432a;color:#fff;padding:10px 14px;border-radius:8px;font-size:14px;line-height:1.4;box-shadow:0 6px 20px #0004;opacity:0;transition:opacity .12s;max-width:260px;z-index:2}
+.tip b{display:block;font-size:16px}
+.tip.show{opacity:1}
+.todo{border:2px dashed var(--line);border-radius:12px;min-height:420px;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted)}
+.todo strong{display:block;font-size:28px;color:var(--ink);margin-bottom:6px}
+aside{background:var(--panel);border-radius:12px;padding:20px 22px;position:sticky;top:16px}
+aside h2{margin:0;font-size:32px;line-height:1.1;text-wrap:balance}
+aside h2.empty{color:var(--muted)}
+aside .use{color:var(--muted);margin:2px 0 14px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px}
+dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}
+dd{white-space:pre-line}dd a{color:var(--line);font-weight:600}
+.book{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:8px;background:var(--hi);color:#fff;font-weight:600;text-decoration:none;margin:14px 0 2px}
+.book:focus-visible{outline:3px solid var(--line);outline-offset:2px}
+.again{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.tip .how{display:block;margin-top:4px;font-size:13px;line-height:1.45;white-space:pre-line;opacity:.92}
+.tip i{display:block;font-style:normal;margin-top:4px;color:#c8f2d6;font-size:13px}
+.note{font-size:13px;color:var(--muted);margin-top:18px;border-top:1px solid color-mix(in srgb,var(--muted) 30%,transparent);padding-top:12px}
+button{font:inherit;font-size:15px;min-height:44px;padding:0 16px;border-radius:8px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;margin-top:12px}
+button:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.list{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.list button{margin:0;min-height:36px;padding:0 10px;font-size:14px;border-width:1px}
+.list button.on{background:var(--hi);color:var(--hiInk);border-color:var(--hi)}
+@media(max-width:760px){main{grid-template-columns:1fr}aside{position:static}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>환경대학원(82동) <b id="fl">5F</b> 안내도</h1>
+  <p>실 위에 마우스를 올리면 정보가 보이고, 클릭하면 예약처로 이동합니다.</p>
+  <nav id="tabs" aria-label="층 선택"></nav>
+</header>
+<main>
+  <div class="plan" id="plan">
+    <ul class="legend" id="legend" aria-label="범례">
+      <li><i style="background:#d3e6fa"></i>예약 필요</li>
+      <li><i style="background:#d4f0db"></i>예약 없이 이용 가능</li>
+      <li><i style="background:#e9e9e6"></i>이용자 지정 (전용)</li>
+      <li><i style="background:#fff"></i>복도·계단·화장실 등</li>
+    </ul>
+    <svg id="svg" role="img" aria-label="평면도"></svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <aside id="info" aria-live="polite">
+    <h2 class="empty">실을 선택하세요</h2>
+    <p class="use">평면도에서 실을 가리키면 여기에 정보가 표시됩니다.</p>
+    <dl></dl>
+    <div id="bookslot"></div>
+    <div class="list" id="list"></div>
+    <p class="note" id="src">실 정보는 rooms.csv 파일에서 불러옵니다.</p>
+    <button id="copy" type="button">평면도 SVG 복사</button>
+  </aside>
+</main>
+
+<!-- rooms.csv를 불러오지 못할 때(파일을 직접 열었을 때 등) 쓰는 예비 데이터 -->
+<script type="text/csv" id="fallback">
+층,공간ID,실명,영문명,구분,용도,담당,이용방법,예약처,연락처,비고
+1,103,종합강의실,Lecture Hall,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,104,기기분석실,Instrumental Analysis,전용,,,,,,
+1,104-1,,,,,,,,,안내판 없음 (피난안내도 표기: 104(1))
+1,105,습식실험실,Wet Chemistry,전용,,,,,,
+1,106,대학원연구실,Laboratory,전용,,,,,,
+1,107,저온실,Cold Room,전용,,,,,,
+1,108,준비실,Preparation,전용,,,,,,
+1,111,기계실,Machine Room,전용,,,,,,
+1,112,창고,Storage,전용,,,,,,
+1,113,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,114,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,115,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+1,wc,화장실,Restroom,,남·여 화장실,,,,,
+1,dwc,장애인 화장실,Accessible Restroom,,,,,,,
+1,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+1,hall,로비·복도,Lobby / Corridor,,,,,,,비상구 3곳 (북측·서측·동측)
+1,stair-c,중앙 계단,Central Stairs,,,,,,,
+1,stair-s,남측 계단,South Stairs,,,,,,,
+1,court,중정,Courtyard,개방,,,,,,1층 바닥이 있는 중정
+2,203,환경계획연구소 행정실,EPI Administration Office,전용,,,,,,
+2,204,도시·환경 미래전략과정 행정실,S.G.S Administration,전용,,,,,,SGS 총동창회 사무국
+2,205,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+2,206,학생회,Student Council,전용,,,,,,
+2,207,여학생 휴게실,Female Student Lounge,개방,,,,,,
+2,208,세미나실,Seminar Room,예약,,,환경대학원 학생회에 문의하면 사용할 수 있습니다.,환경대학원 학생회 (206호) https://docs.google.com/spreadsheets/u/1/d/1ytb1ckmG-1OwaRhQ8-AhEKDxKmuAo_uD/htmlview,,
+2,209,세미나실,Seminar Room,예약,,,환경대학원 학생회에 문의하면 사용할 수 있습니다.,환경대학원 학생회 (206호) https://docs.google.com/spreadsheets/u/1/d/14b7yJlNV5DEA9T-rQ5miqAvMnlLnjsHP/htmlview,,
+2,210,자료실,Library,개방,,,,,,
+2,211,모형제작실,Model Workshop,예약,,환경설계학과 사무실 (419호),"419호, 환경설계학과사무실에 문의하면 사용할 수 있습니다.",419호 환경설계학과사무실,,
+2,212,대학원연구실,Laboratory,전용,,,,,,
+2,213,대학원연구실,Laboratory,전용,,,,,,
+2,214,대학원연구실,Laboratory,전용,,,,,,
+2,215,대학원연구실,Laboratory,전용,,,,,,
+2,216,대학원연구실,Laboratory,전용,,,,,,
+2,217,강사실,Lecturer Room,전용,,,,,,
+2,218,BK사업단 사무실,BK Project Office,전용,,,,,,
+2,219,우정헌 교수실,Prof. Woo Jung-Hun,전용,교수연구실,우정헌 교수,,,,
+2,220,지거 췐 교수실,Prof. Jige Quan,전용,교수연구실,지거 췐 교수,,,,
+2,221,이효중 교수실,Prof. Hyojung Lee,전용,교수연구실,이효중 교수,,,,
+2,222,김태형 교수실,Prof. Tae-Hyoung Gim,전용,교수연구실,김태형 교수,,,,
+2,223,오능환 교수실,Prof. Neung-Hwan Oh,전용,교수연구실,오능환 교수,,,,
+2,224,윤순진 교수실,Prof. Yun Sun Jin,전용,교수연구실,윤순진 교수,,,,
+2,225,대학원연구실,Laboratory,전용,,,,,,
+2,226,대학원연구실,Laboratory,전용,,,,,,
+2,227,대학원연구실,Laboratory,전용,,,,,,
+2,wc,화장실,Restroom,,남·여 화장실,,,,,북측
+2,wc-s,화장실,Restroom,,남·여 화장실,,,,,남측
+2,dwc,장애인 화장실 (여성용),Accessible Restroom (Women),,,,,,,
+2,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+2,hall,복도·홀,Corridor,,,,,,,소화기·소화전 비치
+2,stair-n,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+2,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+2,lounge,중앙 라운지,Central Lounge,개방,,,,,,
+2,piano,피아노,Piano,개방,중앙 라운지 앞,,피아노 위 메모장에 신청곡을 적어보세요. 아침에 누군가 연주해줄 겁니다.,,,
+2,stair-s,남측 계단,South Stairs,,,,,,,비상구
+2,void,중정,Open Atrium,,,,,,,
+2,terrace,테라스,Terrace,개방,옥외 공간,,,,,
+2,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+3,303,세미나실,Seminar Room,예약,,,,,,
+3,304,대학원연구실,Laboratory,전용,,,,,,
+3,305,강의실,Lecture Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+3,306,글로컬홀,GLOCAL HALL,예약,강의실,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+3,307,대학원행정실,Administration Office,전용,,,,,,
+3,307-1,,,,,,,,,안내판 없음
+3,308,교수세미나실,Faculty Seminar Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+3,309,송재민 교수실,Prof. Jaemin Song,전용,교수연구실,송재민 교수,,,,
+3,310,정현주 교수실,Prof. Hyunjoo Jung,전용,교수연구실,정현주 교수,,,,
+3,311,허성호 교수실,Prof. Hur Sung Ho,전용,교수연구실,허성호 교수,,,,
+3,312,이영성 교수실,Prof. Lee Young-Sung,전용,교수연구실,이영성 교수,,,,
+3,313,한상진 교수실,Prof. Han Sangjin,전용,교수연구실,한상진 교수,,,,
+3,314,장수은 교수실,Prof. Justin S. Chang,전용,교수연구실,장수은 교수,,,,
+3,315,박인권 교수실,Prof. In Kwon Park,전용,교수연구실,박인권 교수,,,,
+3,316,환경계획연구소 연구팀,EPI Research Team,전용,,,,,,
+3,318,도시계획/환경관리학과 사무실,Dept. of City Planning / Dept. of Environmental Management,전용,,,,,,
+3,319,대학원연구실,Laboratory,전용,,,,,,
+3,320,대학원연구실,Laboratory,전용,,,,,,
+3,321,전시실,Exhibition Hall,개방,,,,,,
+3,324,경비실,Guard Box,전용,,,,,,
+3,wc,화장실,Restroom,,남·여 화장실,,,,,북측
+3,wc-s,화장실,Restroom,,남·여 화장실,,,,,남측
+3,dwc,장애인 화장실,Accessible Restroom,,,,,,,
+3,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+3,hall,복도·홀,Corridor,,,,,,,소화기·심장충격기 비치
+3,stair-n,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+3,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+3,stair-s,남측 계단,South Stairs,,,,,,,비상구
+3,void,중정,Open Atrium,,,,,,,
+3,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+3,entrance,3층 출입구,3F Entrance,,출입구,,,,,동측 비상구
+4,401,대학원연구실,Laboratory,전용,,,,,,
+4,402,세미나실,Seminar Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+4,403,세미나실,Seminar Room,예약,,,예약하샤에서 예약이 가능합니다.,예약하샤 https://ssims.snu.ac.kr/index.do,,
+4,404,공용연구실,Laboratory,개방,대학원연구실,,,,,
+4,405,설계실,Design Studio,전용,,,,,,
+4,406,교수휴게실,Faculty Lounge,전용,,,,,,
+4,407,부속실,Secretary,전용,,,,,,
+4,408,원장실,Dean's Office,전용,,,,,,
+4,409,교수회의실,Faculty Conference Room,예약,,,,,,
+4,410,김세훈 교수실,Prof. Saehoon Kim,전용,교수연구실,김세훈 교수,,,,
+4,411,성종상 교수실,Prof. Sung Jong Sang,전용,교수연구실,성종상 교수,,,,
+4,412,조경진 교수실,Prof. Zoh Kyung-jin,전용,교수연구실,조경진 교수,,,,
+4,413,손용훈 교수실,Prof. Son Yong-Hoon,전용,교수연구실,손용훈 교수,,,,
+4,414,이유미 교수실,Prof. Lee Yumi,전용,교수연구실,이유미 교수,,,,
+4,415,이제승 교수실,Prof. Jae Seung Lee,전용,교수연구실,이제승 교수,,,,
+4,416,임 저스틴 교수실,Prof. Justin Lim,전용,교수연구실,임 저스틴 교수,,,,
+4,417,환경계획연구소 연구센터,EPI Research Center,전용,,,,,,
+4,419,환경설계학과 사무실,Dept. of Environmental Design,전용,,,,,,
+4,420,GLPN 연구실,GLPN Laboratory,전용,대학원연구실,,,,,
+4,421,USDL 연구실,USDL Laboratory,전용,대학원연구실,,,,,
+4,wc,화장실,Restroom,,남·여 화장실,,,,,북측
+4,wc-s,화장실,Restroom,,남·여 화장실,,,,,남측
+4,dwc,장애인 화장실 (남성용),Accessible Restroom (Men),,,,,,,
+4,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+4,hall,복도·홀,Corridor,,,,,,,소화기·소화전 비치
+4,stair-n,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+4,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+4,stair-s,남측 계단,South Stairs,,,,,,,비상구
+4,void,중정,Open Atrium,,,,,,,
+4,terrace,테라스,Terrace,개방,옥외 공간,,,,,
+4,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+5,501,청소원실,Cleaner's Room,전용,,,,,,
+5,502,대학원연구실,Laboratory,전용,,,,,,
+5,503,VR전산실/서버실,VR Computer Room / Server Room,전용,,,,,,
+5,504,교통실습실,Transportation Lab,전용,,,,,,
+5,505,논문방,Thesis Room,전용,대학원연구실,,,,,2개 실로 구성
+5,506,설계실,DESIGN ROOM,전용,대학원연구실,,,,,
+5,wc,화장실,Restroom,,남·여 화장실,,,,,
+5,shower,샤워실,Shower Room,,,,,,,
+5,ev,엘리베이터,Elevator,,,,,,,화재 시 탑승 금지
+5,hall,복도·홀,Corridor,,,,,,,소화기·소화전 비치
+5,terrace-n,북측 테라스,North Terrace,개방,옥외 공간,,,,,
+5,stair-n2,북측 비상계단,North Emergency Stairs,,,,,,,비상구
+5,stair-c,중앙 계단,Central Stairs,,,,,,,비상구
+5,stair-s,남측 계단,South Stairs,,,,,,,비상구
+5,void,중정,Open Atrium,,,,,,,
+5,garden,옥상정원,Rooftop Garden,개방,,,,,,
+</script>
+
+<script>
+{
+// ── 층별 도면 형태 ────────────────────────────────────────
+// 각 층은 같은 형식: viewBox, 바깥 벽선(walls), 공간 목록(spaces)
+// 공간 id는 rooms.csv의 "공간ID"와 맞춰야 정보가 연결됩니다.
+// 숫자 id(501 등)는 도면에 호수가 표시되고, 나머지는 글자 없이 호버만 됩니다.
+const FLOORS = {
+  1: {
+    viewBox: '740 245 860 975', labelSize: 18,
+    walls: '750,342 1090,342 1090,305 1558,318 1558,752 1430,752 1430,710 1386,710 1386,1087 1430,1087 1430,1210 1079,1210 1079,1089 1032,1093 1088,684 1080,680 1045,640 1030,590 1040,545 750,545 750,342',
+    spaces: [
+      {id:'hall', pts:[[750,342],[1090,342],[1090,305],[1558,318],[1558,752],[1430,752],[1430,710],[1386,710],[1386,1087],[1430,1087],[1430,1210],[1079,1210],[1079,1089],[1032,1093],[1088,684],[1080,680],[1045,640],[1030,590],[1040,545],[750,545]]},
+      {id:'103', pts:[[1205,308],[1435,316],[1435,442],[1205,442]], label:[1321,375]},
+      {id:'104', pts:[[985,342],[1150,342],[1150,442],[985,442]], label:[1068,393]},
+      {id:'104-1', pts:[[1090,305],[1150,305],[1150,342],[1090,342]], label:[1120,324]},
+      {id:'105', pts:[[750,342],[925,342],[925,545],[750,545]], label:[842,445]},
+      {id:'106', pts:[[925,342],[985,342],[985,442],[925,442]], label:[956,393]},
+      {id:'107', pts:[[1010,482],[1065,482],[1045,545],[1010,545]], label:[1033,514]},
+      {id:'108', pts:[[925,482],[1010,482],[1010,545],[925,545]], label:[968,514]},
+      {id:'111', pts:[[1238,545],[1430,545],[1430,710],[1238,710]], label:[1338,628]},
+      {id:'113', pts:[[1075,781],[1196,785],[1193,975],[1048,975]], label:[1120,880]},
+      {id:'114', pts:[[1079,1089],[1193,1087],[1193,1210],[1079,1210]], label:[1136,1150]},
+      {id:'115', pts:[[1193,1123],[1234,1123],[1234,1087],[1430,1087],[1430,1210],[1193,1210]], label:[1330,1160]},
+      {id:'court', pts:[[1234,799],[1386,799],[1386,1087],[1234,1087]]},
+      {id:'stair-s', pts:[[1131,975],[1193,975],[1193,1067],[1131,1067]]},
+      {id:'wc', pts:[[1435,318],[1558,318],[1558,410],[1435,410]]},
+      {id:'dwc', pts:[[1515,455],[1558,455],[1558,492],[1515,492]]},
+      {id:'ev', pts:[[1438,462],[1462,462],[1462,492],[1438,492]]},
+      {id:'stair-c', pts:[[1278,535],[1378,505],[1385,560],[1290,595]]},
+      {id:'112', pts:[[1430,545],[1558,545],[1558,752],[1430,752]], label:[1494,648]}
+    ]
+  },
+  2: {
+    viewBox: '995 260 935 1135', labelSize: 20,
+    walls: '1005,460 1213,460 1213,418 1918,418 1918,1225 1895,1225 1895,1258 1918,1258 1918,1385 1428,1385 1428,1228 1385,1228 1435,783 1553,783 1553,683 1005,683 1005,460',
+    spaces: [
+      {id:'hall', pts:[[1005,460],[1213,460],[1213,418],[1918,418],[1918,1225],[1895,1225],[1895,1258],[1918,1258],[1918,1385],[1428,1385],[1428,1228],[1385,1228],[1435,783],[1553,783],[1553,683],[1005,683]]},
+      {id:'203', pts:[[1672,460],[1790,460],[1790,575],[1672,575]], label:[1732,517]},
+      {id:'204', pts:[[1557,460],[1672,460],[1672,575],[1557,575]], label:[1615,517]},
+      {id:'205', pts:[[1428,445],[1557,445],[1557,625],[1428,635]], label:[1493,518]},
+      {id:'206', pts:[[1308,460],[1425,460],[1425,570],[1308,563]], label:[1367,517]},
+      {id:'207', pts:[[1250,460],[1308,460],[1308,563],[1250,560]], label:[1279,518]},
+      {id:'208', pts:[[1128,460],[1250,460],[1250,560],[1128,552]], label:[1190,512]},
+      {id:'209', pts:[[1005,460],[1128,460],[1128,550],[1005,548]], label:[1069,509]},
+      {id:'210', pts:[[1005,548],[1425,570],[1425,635],[1368,640],[1368,683],[1005,683]], label:[1190,622]},
+      {id:'211', pts:[[1790,678],[1915,678],[1915,787],[1790,787]], label:[1855,732]},
+      {id:'212', pts:[[1790,787],[1915,787],[1915,893],[1790,893]], label:[1855,841]},
+      {id:'213', pts:[[1790,893],[1915,893],[1915,950],[1790,950]], label:[1855,922]},
+      {id:'214', pts:[[1790,950],[1915,950],[1915,1003],[1790,1003]], label:[1855,978]},
+      {id:'215', pts:[[1790,1003],[1915,1003],[1915,1115],[1790,1115]], label:[1855,1060]},
+      {id:'216', pts:[[1790,1115],[1915,1115],[1915,1225],[1790,1225]], label:[1855,1170]},
+      {id:'217', pts:[[1855,1258],[1918,1258],[1918,1385],[1855,1385]], label:[1886,1322]},
+      {id:'218', pts:[[1793,1258],[1855,1258],[1855,1385],[1793,1385]], label:[1824,1322]},
+      {id:'219', pts:[[1735,1258],[1793,1258],[1793,1385],[1735,1385]], label:[1764,1322]},
+      {id:'220', pts:[[1675,1258],[1735,1258],[1735,1385],[1675,1385]], label:[1705,1322]},
+      {id:'221', pts:[[1615,1258],[1675,1258],[1675,1385],[1615,1385]], label:[1645,1322]},
+      {id:'222', pts:[[1555,1258],[1615,1258],[1615,1385],[1555,1385]], label:[1585,1322]},
+      {id:'223', pts:[[1493,1258],[1555,1258],[1555,1385],[1493,1385]], label:[1524,1322]},
+      {id:'224', pts:[[1428,1258],[1493,1258],[1493,1385],[1428,1385]], label:[1461,1322]},
+      {id:'225', pts:[[1412,1005],[1553,1005],[1553,1110],[1400,1110]], label:[1479,1057]},
+      {id:'226', pts:[[1424,895],[1553,895],[1553,1005],[1412,1005]], label:[1485,951]},
+      {id:'227', pts:[[1435,783],[1553,783],[1553,895],[1424,895]], label:[1490,840]},
+      {id:'wc', pts:[[1790,460],[1915,460],[1915,540],[1790,540]]},
+      {id:'wc-s', pts:[[1400,1110],[1495,1110],[1495,1225],[1387,1225]]},
+      {id:'dwc', pts:[[1870,580],[1915,580],[1915,625],[1870,625]]},
+      {id:'ev', pts:[[1795,585],[1828,585],[1828,625],[1795,625]]},
+      {id:'stair-n', pts:[[1213,270],[1257,270],[1257,418],[1213,418]]},
+      {id:'stair-c', pts:[[1588,615],[1758,615],[1758,727],[1588,727]]},
+      {id:'lounge', pts:[[1588,727],[1758,727],[1758,850],[1588,850]]},
+      {id:'piano', pts:[[1655,852],[1700,852],[1700,870],[1655,870]]},
+      {id:'stair-s', pts:[[1495,1110],[1555,1110],[1555,1245],[1495,1245]]},
+      {id:'terrace-n', pts:[[1213,418],[1918,418],[1918,460],[1557,460],[1557,445],[1428,445],[1428,460],[1213,460]]},
+      {id:'terrace', pts:[[1435,683],[1553,683],[1553,783],[1435,783]]},
+      {id:'void', pts:[[1588,893],[1758,893],[1758,1225],[1588,1225]]}
+    ]
+  },
+  3: {
+    viewBox: '875 250 910 1070', labelSize: 20,
+    walls: '887,437 1085,437 1085,400 1412,400 1412,437 1748,437 1748,668 1717,668 1717,688 1773,688 1773,805 1748,805 1748,1160 1722,1160 1722,1188 1748,1188 1748,1305 1227,1305 1237,1188 1288,1188 1288,1160 1240,1158 1290,740 1295,648 887,648 887,437',
+    spaces: [
+      {id:'hall', pts:[[887,437],[1085,437],[1085,400],[1412,400],[1412,437],[1748,437],[1748,668],[1717,668],[1717,688],[1773,688],[1773,805],[1748,805],[1748,1160],[1722,1160],[1722,1188],[1748,1188],[1748,1305],[1227,1305],[1237,1188],[1288,1188],[1288,1160],[1240,1158],[1290,740],[1295,648],[887,648]]},
+      {id:'303', pts:[[1517,437],[1628,437],[1628,542],[1517,542]], label:[1573,491]},
+      {id:'304', pts:[[1408,437],[1517,437],[1517,542],[1408,542]], label:[1462,492]},
+      {id:'305', pts:[[1285,400],[1408,400],[1408,600],[1285,600]], label:[1347,500]},
+      {id:'306', pts:[[887,437],[1085,437],[1285,437],[1285,648],[887,648]], label:[1089,543]},
+      {id:'307', pts:[[1627,897],[1745,897],[1745,1007],[1627,1007]], label:[1686,953]},
+      {id:'307-1', pts:[[1627,1007],[1745,1007],[1745,1055],[1627,1055]], label:[1686,1031]},
+      {id:'308', pts:[[1627,1055],[1745,1055],[1745,1160],[1627,1160]], label:[1687,1106]},
+      {id:'309', pts:[[1688,1188],[1748,1188],[1748,1305],[1688,1305]], label:[1717,1247]},
+      {id:'310', pts:[[1630,1188],[1688,1188],[1688,1305],[1630,1305]], label:[1659,1247]},
+      {id:'311', pts:[[1573,1188],[1630,1188],[1630,1305],[1573,1305]], label:[1603,1247]},
+      {id:'312', pts:[[1517,1188],[1573,1188],[1573,1305],[1517,1305]], label:[1545,1247]},
+      {id:'313', pts:[[1460,1188],[1517,1188],[1517,1305],[1460,1305]], label:[1489,1247]},
+      {id:'314', pts:[[1405,1188],[1460,1188],[1460,1305],[1405,1305]], label:[1433,1247]},
+      {id:'315', pts:[[1348,1188],[1405,1188],[1405,1305],[1348,1305]], label:[1377,1247]},
+      {id:'316', pts:[[1237,1188],[1348,1188],[1348,1305],[1227,1305]], label:[1289,1247]},
+      {id:'318', pts:[[1268,948],[1403,948],[1403,1045],[1258,1045]], label:[1332,998]},
+      {id:'319', pts:[[1279,845],[1403,845],[1403,948],[1268,948]], label:[1337,896]},
+      {id:'320', pts:[[1290,740],[1403,740],[1403,845],[1279,845]], label:[1343,792]},
+      {id:'321', pts:[[1295,648],[1403,648],[1403,740],[1290,740]], label:[1350,691]},
+      {id:'324', pts:[[1738,847],[1735,858],[1727,868],[1715,875],[1700,877],[1685,875],[1673,868],[1665,858],[1662,847],[1665,836],[1673,826],[1685,819],[1700,817],[1715,819],[1727,826],[1735,836]], label:[1700,847]},
+      {id:'wc', pts:[[1628,437],[1748,437],[1748,505],[1628,505]]},
+      {id:'wc-s', pts:[[1258,1045],[1350,1045],[1350,1158],[1245,1158]]},
+      {id:'dwc', pts:[[1705,550],[1745,550],[1745,597],[1705,597]]},
+      {id:'ev', pts:[[1630,555],[1662,555],[1662,597],[1630,597]]},
+      {id:'stair-n', pts:[[1085,262],[1125,262],[1125,400],[1085,400]]},
+      {id:'stair-c', pts:[[1437,583],[1597,583],[1597,803],[1437,803]]},
+      {id:'stair-s', pts:[[1350,1045],[1408,1045],[1408,1180],[1350,1180]]},
+      {id:'entrance', pts:[[1717,688],[1773,688],[1773,805],[1717,805]], text:'출입구', vertical:true},
+      {id:'terrace-n', pts:[[1085,400],[1285,400],[1285,437],[1085,437]]},
+      {id:'void', pts:[[1437,843],[1597,843],[1597,1157],[1437,1157]]}
+    ]
+  },
+  4: {
+    viewBox: '805 225 825 995', labelSize: 18,
+    walls: '823,402 993,402 993,368 1280,368 1280,402 1612,402 1612,617 1567,617 1567,1095 1568,1205 1112,1205 1120,1095 1128,1095 1172,683 1280,683 1280,598 823,598 823,402',
+    spaces: [
+      {id:'hall', pts:[[823,402],[993,402],[993,368],[1280,368],[1280,402],[1612,402],[1612,617],[1567,617],[1567,1095],[1568,1205],[1112,1205],[1120,1095],[1128,1095],[1172,683],[1280,683],[1280,598],[823,598]]},
+      {id:'401', pts:[[1577,402],[1612,402],[1612,505],[1577,505]], label:[1594,479]},
+      {id:'402', pts:[[1370,402],[1468,402],[1468,500],[1370,500]], label:[1420,452]},
+      {id:'403', pts:[[1277,402],[1370,402],[1370,500],[1277,500]], label:[1324,452]},
+      {id:'404', pts:[[1170,368],[1277,368],[1277,552],[1170,552]], label:[1222,460]},
+      {id:'405', pts:[[823,402],[1170,402],[1170,598],[823,598]], label:[998,500]},
+      {id:'406', pts:[[1465,617],[1567,617],[1567,748],[1465,748]], label:[1516,682]},
+      {id:'407', pts:[[1465,748],[1567,748],[1567,797],[1465,797]], label:[1516,773]},
+      {id:'408', pts:[[1465,797],[1567,797],[1567,928],[1465,928]], label:[1514,862]},
+      {id:'409', pts:[[1465,928],[1567,928],[1567,1068],[1465,1068]], label:[1514,997]},
+      {id:'410', pts:[[1514,1095],[1568,1095],[1568,1205],[1514,1205]], label:[1541,1151]},
+      {id:'411', pts:[[1463,1095],[1514,1095],[1514,1205],[1463,1205]], label:[1489,1151]},
+      {id:'412', pts:[[1414,1095],[1463,1095],[1463,1205],[1414,1205]], label:[1439,1151]},
+      {id:'413', pts:[[1364,1095],[1414,1095],[1414,1205],[1364,1205]], label:[1389,1151]},
+      {id:'414', pts:[[1315,1095],[1364,1095],[1364,1205],[1315,1205]], label:[1340,1151]},
+      {id:'415', pts:[[1266,1095],[1315,1095],[1315,1205],[1266,1205]], label:[1290,1151]},
+      {id:'416', pts:[[1215,1095],[1266,1095],[1266,1205],[1215,1205]], label:[1241,1151]},
+      {id:'417', pts:[[1112,1095],[1215,1095],[1215,1205],[1112,1205]], label:[1165,1151]},
+      {id:'419', pts:[[1151,880],[1270,880],[1270,965],[1142,965]], label:[1205,922]},
+      {id:'420', pts:[[1161,782],[1270,782],[1270,880],[1151,880]], label:[1212,830]},
+      {id:'421', pts:[[1172,683],[1270,683],[1270,782],[1161,782]], label:[1216,733]},
+      {id:'dwc', pts:[[1537,505],[1577,505],[1577,552],[1537,552]]},
+      {id:'wc', pts:[[1468,402],[1577,402],[1577,465],[1468,465]]},
+      {id:'wc-s', pts:[[1142,965],[1220,965],[1220,1072],[1131,1072]]},
+      {id:'ev', pts:[[1470,515],[1500,515],[1500,550],[1470,550]]},
+      {id:'stair-n', pts:[[993,235],[1030,235],[1030,368],[993,368]]},
+      {id:'stair-c', pts:[[1300,540],[1440,540],[1440,742],[1300,742]]},
+      {id:'stair-s', pts:[[1220,975],[1270,975],[1270,1085],[1220,1085]]},
+      {id:'terrace-n', pts:[[993,368],[1170,368],[1170,402],[993,402]]},
+      {id:'terrace', pts:[[1170,598],[1280,598],[1280,683],[1172,683]]},
+      {id:'void', pts:[[1298,778],[1438,778],[1438,1065],[1298,1065]]}
+    ]
+  },
+  5: {
+    viewBox: '725 255 680 830',
+    // 옥상정원과 맞닿은 외벽 (중앙 계단이 정원 쪽으로 튀어나온 부분 포함)
+    extraWalls: ['1110,557 1137,557 1137,665 1250,665 1250,557 1362,557'],
+    walls: '738,368 828,368 828,338 1004,338 1004,368 1395,368 1395,557 1362,557 1362,1078 982,1078 1030,628 1110,628 1110,557 738,557 738,368',
+    spaces: [
+      {id:'hall',     pts:[[1027,457],[1275,457],[1275,420],[1365,420],[1365,500],[1395,500],[1395,557],[1003,557],[1003,497],[1027,497]]},
+      {id:'garden',   pts:[[1110,557],[1362,557],[1362,1078],[982,1078],[1030,628],[1110,628]]},
+      {id:'501', pts:[[1365,368],[1395,368],[1395,500],[1365,500]], label:[1380,434]},
+      {id:'502', pts:[[1177,368],[1275,368],[1275,457],[1177,457]], label:[1227,412]},
+      {id:'503', pts:[[1085,368],[1177,368],[1177,457],[1085,457]], label:[1131,413]},
+      {id:'504', pts:[[1027,368],[1085,368],[1085,457],[1027,457]], label:[1055,413]},
+      {id:'505', pts:[[920,466],[985,466],[985,557],[920,557]], label:[952,511], hoverName:true},
+      {id:'505', pts:[[920,368],[985,368],[985,459],[920,459]], label:[952,413], hoverName:true},
+      {id:'506', pts:[[738,368],[920,368],[920,459],[985,459],[985,368],[1027,368],[1027,497],[1003,497],[1003,557],[985,557],[985,466],[920,466],[920,557],[738,557]], label:[869,468]},
+      {id:'wc',       pts:[[1275,368],[1365,368],[1365,420],[1275,420]]},
+      {id:'shower',   pts:[[1335,462],[1365,462],[1365,500],[1335,500]]},
+      {id:'ev',       pts:[[1275,462],[1300,462],[1300,500],[1275,500]]},
+      {id:'terrace-n', pts:[[828,338],[1004,338],[1004,368],[828,368]]},
+      {id:'stair-n2', pts:[[880,268],[912,268],[912,338],[880,338]]},
+      {id:'stair-c',  pts:[[1137,488],[1250,488],[1250,665],[1137,665]]},
+      {id:'void',     pts:[[1137,702],[1252,702],[1252,968],[1137,968]]},
+      {id:'stair-s',  pts:[[1072,868],[1115,868],[1115,975],[1072,975]]}
+    ]
+  }
+};
+const FLOOR_IDS = [1,2,3,4,5];
+
+// ── CSV 읽기 ──────────────────────────────────────────────
+function parseCSV(t){
+  const rows=[]; let row=[], f='', q=false;
+  t=t.replace(/^﻿/,'');
+  for(let i=0;i<t.length;i++){
+    const c=t[i];
+    if(q){ if(c=='"'){ if(t[i+1]=='"'){f+='"';i++} else q=false } else f+=c; }
+    else if(c=='"') q=true;
+    else if(c==','||c=='\t'){ row.push(f); f=''; }
+    else if(c=='\n'||c=='\r'){ if(c=='\r'&&t[i+1]=='\n') i++; row.push(f); f=''; if(row.some(x=>x.trim())) rows.push(row); row=[]; }
+    else f+=c;
+  }
+  row.push(f); if(row.some(x=>x.trim())) rows.push(row);
+  const head = rows.shift().map(h=>h.trim());
+  return rows.map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||'').trim()])));
+}
+let INFO = {};
+const KEY_F='층', KEY_ID='공간ID', KEY_NAME='실명', KEY_EN='영문명';
+function loadInfo(text, label){
+  INFO = {};
+  for(const r of parseCSV(text)){
+    const f = String(r[KEY_F]||'').replace(/[^0-9]/g,''); const id = r[KEY_ID];
+    if(f && id) INFO[f+'-'+id] = r;
+  }
+  document.getElementById('src').textContent = label;
+}
+
+// ── 화면 ─────────────────────────────────────────────────
+const svg=document.getElementById('svg'), tip=document.getElementById('tip'), plan=document.getElementById('plan');
+const info=document.getElementById('info'), list=document.getElementById('list'), tabs=document.getElementById('tabs');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cen=p=>[p.reduce((a,q)=>a+q[0],0)/p.length, p.reduce((a,q)=>a+q[1],0)/p.length];
+const KEY_BOOK='예약처', KEY_HOW='이용방법';
+const URL_RE=/(https?:\/\/[^\s,]+)/g, TEL_RE=/(0\d{1,2}-?\d{3,4}-?\d{4})/g;
+function rich(v){
+  return esc(v).replace(URL_RE,u=>`<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\//,'').replace(/\/$/,'')}</a>`)
+               .replace(TEL_RE,(t,_,i,str)=>/href="[^"]*$/.test(str.slice(0,i))?t:`<a href="tel:${t.replace(/-/g,'')}">${t}</a>`);
+}
+const bookLink=id=>((INFO[floor+'-'+id]||{})[KEY_BOOK]||'').match(URL_RE)?.[0]||'';
+// 커서 없이 항상 보이는 글자 표시 (예: 출입구). vertical:true면 세로로 쌓음
+function txtLabel(s,x,y,fs){
+  if(!s.vertical) return `<text class="lb" x="${x}" y="${y}" style="font-size:${fs}px">${esc(s.text)}</text>`;
+  const ch=[...s.text], lh=fs*1.15, y0=y-(ch.length-1)*lh/2;
+  return `<text class="lb" style="font-size:${fs}px">${ch.map((c,i)=>`<tspan x="${x}" y="${y0+i*lh}">${esc(c)}</tspan>`).join('')}</text>`;
+}
+// "구분" 칸 → 색. 예약/개방/전용 (1/2/3 숫자로 적어도 됨)
+const KEY_CAT='구분';
+function catOf(id){ const v=String((INFO[floor+'-'+id]||{})[KEY_CAT]||'').trim();
+  if(/^1$|예약/.test(v)) return 'c-book'; if(/^2$|개방|자유|상시/.test(v)) return 'c-open'; if(/^3$|전용|지정/.test(v)) return 'c-own'; return ''; }
+const CAT_TEXT={'c-book':'예약 필요','c-open':'예약 없이 이용 가능','c-own':'이용자 지정 (전용)'};
+const isNum=id=>/^\d+(-\d+)?$/.test(id);
+const numVal=id=>parseFloat(String(id).replace('-','.'));
+let floor=5, sel=null, pinned=null;
+
+const rec=id=>INFO[floor+'-'+id]||{};
+const spaceOf=id=>(FLOORS[floor]?.spaces||[]).find(s=>s.id===id)||{};
+function title(id){ const r=rec(id), n=r[KEY_NAME];
+  if(spaceOf(id).hoverName) return n||`${id}호`;   // 호수 대신 이름만 표시하는 실
+  return isNum(id) ? (n? `${id}호 ${n}` : `${id}호`) : (n||id); }
+
+tabs.innerHTML = FLOOR_IDS.map(f=>`<a href="#f${f}" data-f="${f}">${f}F</a>`).join('');
+
+function render(){
+  const F=FLOORS[floor];
+  document.getElementById('fl').textContent=floor+'F';
+  tabs.querySelectorAll('a').forEach(a=>{const on=+a.dataset.f===floor; a.classList.toggle('on',on); a.toggleAttribute('aria-current',on)});
+  resetPanel();
+  const old=plan.querySelector('.todo'); if(old) old.remove();
+  if(!F){
+    svg.style.display='none'; list.innerHTML=''; document.getElementById('legend').style.display='none';
+    plan.insertAdjacentHTML('afterbegin',`<div class="todo"><div><strong>${floor}F 평면도 준비 중</strong>이 층의 피난안내도 사진을 올려주시면 같은 형식으로 그려 넣을게요.</div></div>`);
+    return;
+  }
+  document.getElementById('legend').style.display=''; svg.style.display=''; svg.setAttribute('viewBox',F.viewBox); svg.setAttribute('aria-label',`환경대학원 ${floor}층 평면도`);
+  svg.innerHTML = F.spaces.map(s=>{
+    const [x,y]=s.label||cen(s.pts);
+    const link=bookLink(s.id);
+    const g=`<g class="g" data-id="${esc(s.id)}"><polygon class="sp ${catOf(s.id)}"${link?'':' tabindex="0"'} aria-label="${esc(title(s.id))}" points="${s.pts.map(p=>p.join(',')).join(' ')}"/>`+
+      (s.hoverName?`<text class="lb hov" x="${x}" y="${y}"${F.labelSize?` style="font-size:${F.labelSize}px"`:''}>${esc(rec(s.id)[KEY_NAME]||s.id)}</text>`:'')+
+      (isNum(s.id)&&!s.hoverName?`<text class="lb" x="${x}" y="${y}"${F.labelSize?` style="font-size:${F.labelSize}px"`:''}>${esc(s.id)}</text>`:'')+
+      (s.id==='void'&&s.pts.length===4?`<path class="nofloor" d="M${s.pts[0]}L${s.pts[2]}M${s.pts[1]}L${s.pts[3]}"/>`:'')+   // 중정: 바닥 없음 X 표시
+      (s.text?txtLabel(s,x,y,F.labelSize||15):'')+`</g>`;
+    return link ? `<a href="${esc(link)}" target="_blank" rel="noopener" aria-label="${esc(title(s.id))} 예약하기">${g}</a>` : g;
+  }).join('') + (F.holes||[]).map(h=>`<polygon class="hole" points="${h}"/>`).join('') + [F.walls,...(F.extraWalls||[])].map(w=>`<polyline class="wall" points="${w}" pointer-events="none"/>`).join('');
+  list.innerHTML = F.spaces.filter((s,k,arr)=>isNum(s.id)&&arr.findIndex(t=>t.id===s.id)===k).sort((a,b)=>numVal(a.id)-numVal(b.id)).map(s=>`<button type="button" data-id="${esc(s.id)}">${esc(title(s.id))}</button>`).join('');
+}
+function resetPanel(){
+  sel=null; pinned=null;
+  const h=info.querySelector('h2'); h.textContent='실을 선택하세요'; h.classList.add('empty');
+  info.querySelector('.use').textContent='평면도에서 실을 가리키면 여기에 정보가 표시됩니다.';
+  info.querySelector('dl').innerHTML='';
+  document.getElementById('bookslot').innerHTML='';
+}
+function show(id){
+  sel=id; const r=rec(id);
+  svg.querySelectorAll('.g').forEach(g=>{const on=g.dataset.id===id; g.classList.toggle('on',on); g.querySelector('.sp').classList.toggle('on',on)});
+  list.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+  const h=info.querySelector('h2'); h.textContent=title(id); h.classList.remove('empty');
+  info.querySelector('.use').textContent=r[KEY_EN]||'';
+  const skip=new Set([KEY_F,KEY_ID,KEY_EN]);
+  const rows=[['층',floor+'F'], ...(isNum(id)?[['호실',id+'호']]:[]), ...Object.entries(r).filter(([k,v])=>!skip.has(k)&&v&&!k.startsWith('#')).map(([k,v])=>k===KEY_CAT&&catOf(id)?[k,CAT_TEXT[catOf(id)]]:[k,v])];
+  info.querySelector('dl').innerHTML = rows.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${rich(v)}</dd>`).join('');
+  const book=r[KEY_BOOK]||'', link=(book.match(URL_RE)||[])[0];
+  document.getElementById('bookslot').innerHTML = link ? `<a class="book" href="${esc(link)}" target="_blank" rel="noopener">예약하기</a>` : '';
+}
+function route(){
+  const m=/^#f([1-9])$/.exec(location.hash); const f=m?+m[1]:5;
+  floor = FLOOR_IDS.includes(f)?f:5; render();
+}
+
+list.addEventListener('click',e=>{const b=e.target.closest('button'); if(b){pinned=b.dataset.id; show(pinned);}});
+svg.addEventListener('pointermove',e=>{
+  const g=e.target.closest('.g'); if(!g){tip.classList.remove('show');return}
+  const id=g.dataset.id, r=rec(id);
+  tip.innerHTML=`<b>${esc(title(id))}</b>${esc(r[KEY_EN]||'')}${catOf(id)?'<i>'+CAT_TEXT[catOf(id)]+'</i>':''}${r[KEY_HOW]?'<span class="how">'+esc(r[KEY_HOW])+'</span>':''}${bookLink(id)?'<i>클릭하면 예약 페이지로 이동해요</i>':(r[KEY_BOOK]?'<i>예약: '+esc(r[KEY_BOOK])+'</i>':'')}`;
+  const b=plan.getBoundingClientRect(); let x=e.clientX-b.left+14, y=e.clientY-b.top+14;
+  if(x+270>b.width) x=e.clientX-b.left-270;
+  tip.style.left=x+'px'; tip.style.top=y+'px'; tip.classList.add('show');
+  if(e.pointerType==='mouse') show(id);
+});
+svg.addEventListener('pointerleave',()=>{tip.classList.remove('show'); if(pinned) show(pinned);});
+// 마우스: 링크가 있으면 바로 이동 / 터치·펜: 첫 번째 탭은 정보, 같은 실을 한 번 더 탭하면 이동
+let lastPtr='mouse';
+svg.addEventListener('pointerdown',e=>{lastPtr=e.pointerType||'mouse'});
+svg.addEventListener('click',e=>{
+  const g=e.target.closest('.g'); if(!g) return;
+  const id=g.dataset.id, a=e.target.closest('a');
+  if(a && lastPtr!=='mouse' && e.detail!==0 && pinned!==id){ e.preventDefault(); }
+  pinned=id; show(id);
+  if(a && lastPtr!=='mouse' && e.defaultPrevented) document.getElementById('bookslot').insertAdjacentHTML('beforeend','<p class="again">실을 한 번 더 누르면 예약처로 이동해요</p>');
+  lastPtr='mouse';
+});
+svg.addEventListener('focusin',e=>{const g=e.target.closest('.g')||e.target.querySelector?.('.g'); if(g) show(g.dataset.id)});
+window.addEventListener('hashchange',route);
+
+document.getElementById('copy').addEventListener('click',async e=>{
+  const F=FLOORS[floor]; const btn=e.currentTarget;
+  if(!F){btn.textContent='이 층은 아직 도면이 없어요';setTimeout(()=>btn.textContent='평면도 SVG 복사',2000);return}
+  const s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${F.viewBox}">`+
+    F.spaces.map(r=>`<polygon id="room-${r.id}" points="${r.pts.map(p=>p.join(',')).join(' ')}" fill="#fff" stroke="#1d5c3a" stroke-width="1.5"/>`).join('')+
+    `<polyline points="${F.walls}" fill="none" stroke="#1d5c3a" stroke-width="3"/></svg>`;
+  try{await navigator.clipboard.writeText(s); btn.textContent='복사했습니다'}catch{btn.textContent='복사 실패 — 브라우저에서 허용 필요'}
+  setTimeout(()=>btn.textContent='평면도 SVG 복사',2000);
+});
+
+loadInfo(document.getElementById('fallback').textContent.trim(),'실 정보: 페이지에 내장된 예비 데이터');
+route();
+fetch('rooms.csv',{cache:'no-store'}).then(r=>r.ok?r.text():Promise.reject()).then(t=>{
+  loadInfo(t,'실 정보: rooms.csv'); const keep=pinned||sel; render(); if(keep){pinned=keep; show(keep);}
+}).catch(()=>{});
+}
+</script>
+</body>
+</html>
+
